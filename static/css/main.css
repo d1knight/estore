@@ -1,0 +1,100 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: url(../img/background.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.containerr {
+width: 95vw; 
+min-height: 100vh;
+margin: 0 3%;
+}
+.containerr .header {
+    height: 100px;
+    background: rgb(2,0,36);
+    background: linear-gradient(356deg, rgba(2,0,36,0.4) 0%, rgba(217,143,80,0.4) 41%, rgba(0,212,255,0.4) 100%);
+    margin: 0 2.5%;
+    display: flex;
+    justify-content:space-between;
+    border-radius: 5px;
+    margin-bottom: 7px;
+    margin-top: 4px;
+}
+
+.containerr .header a {
+margin: 15px;
+text-align: center;
+text-decoration: none;
+cursor: pointer;
+}
+
+.containerr .header button {
+    margin: 15px;
+}
+.containerr .header a {
+    text-align: center;
+}
+.containerr .content {
+    display: flex;
+    height: 85vh;
+    margin: 0 2.5%;
+}
+
+.containerr .content .nav{
+    background: rgb(2,0,36);
+    background: linear-gradient(356deg, rgba(2,0,36,0.4) 0%, rgba(217,143,80,0.4) 41%, rgba(0,212,255,0.4) 100%);
+    width: 20%;
+    border-radius: 5px;
+    margin-right: 7px;
+    /* background-color: rgba(255, 255, 255, 0.7); */
+}
+.containerr .content .nav ul{
+    margin-top: 25px;
+    list-style: none;
+    text-align: center;
+    width: 100%;
+}
+.containerr .content .nav a{
+    text-decoration: none;
+    font-size: 24px;
+    text-shadow: 1px 1px 2px rgb(239, 95, 95), 0 0 0.5em blue, 0 0 0.1em blue;
+}
+
+.containerr .content .info {
+    width: 79.6%;
+    background: rgb(2,0,36);
+    background: linear-gradient(356deg, rgba(2,0,36,0.4) 0%, rgba(217,143,80,0.4) 41%, rgba(0,212,255,0.4) 100%);
+    border-radius: 5px;
+    font-size: 20px;
+    color: whitesmoke;
+    text-shadow: 1px 1px 2px rgb(149, 54, 54), 0 0 0.1em rgb(59, 59, 202), 0 0 0.1em blue;
+}
+
+.containerr .content .info a {
+    text-decoration: none;
+}
+.containerr .create{
+    display: flex;
+    justify-content: space-between;
+}
+.containerr .create h1 {
+    margin-left: 30px;
+}
+.containerr .create button {
+    margin: 10px;
+}
+
+.containerr a {
+    color: #fff;
+    
+}
+
+.containerr .content .info .box-author,.box-delete,.box-update-author {
+    margin: 40px;
+}
+
+

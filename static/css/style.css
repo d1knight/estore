@@ -1,0 +1,160 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    height: 10vh;
+   
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 5%;
+    font-size: 22px;
+}
+
+.info-blog {
+    margin: 0 5%;
+    display: flex;
+    justify-content: space-between;
+}
+.nav-blog {
+    background-color: rgba(255, 255, 255, 0.8); /* Белый с прозрачностью */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Мягкая тень */
+    width: 25%;
+}
+
+.nav-blog ul {
+    list-style: none;
+    text-align: justify;
+    margin-top: 20px;
+    
+}
+.nav-blog ul li {
+    margin-bottom: 10px;
+}
+.nav-blog ul li a{
+text-decoration: none;
+font-size: 20px;
+cursor: pointer;
+}
+
+.content-blog {
+
+    width: 74%;
+}
+header .catalog a {
+text-decoration: none;
+
+}
+
+header .list {
+   
+}
+
+header ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+}
+
+header ul li {
+    margin-left: 25px;
+}
+
+header ul li a {
+    text-decoration: none;
+}
+
+
+.pagination {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination .current {
+    font-weight: bold;
+}
+
+
+.main-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.main-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.thumbnail-container {
+    position: relative;
+    padding: 0 40px;
+}
+
+.thumbnail-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.thumbnail-strip {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail {
+    flex: 0 0 80px;
+    height: 80px;
+    margin: 0 5px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.thumbnail.active {
+    border-color: #0d6efd;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.prev-button {
+    left: 0;
+}
+
+.next-button {
+    right: 0;
+}

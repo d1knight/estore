@@ -1,0 +1,20 @@
+{% extends 'admin.html' %}
+{% block admin %}
+<div class="box-update-author">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="name">Название:</label>
+    <input class="alert alert-info" type="text" name="name" id="name" value="{{category.name}}"><br>
+
+    <label for="description">Описание:</label>
+    <input class="alert alert-info" type="text" name="description" id="description" value="{{category.description}}"> <br>
+
+    <label for="slug">Слаг:</label>
+    <input class="alert alert-info" type="text" name="slug" id="slug" value="{{category.slug}}"><br>
+
+    <button class="btn btn-success" type="submit">Сохранить</button>
+</form>
+</div>
+
+
+{% endblock %}

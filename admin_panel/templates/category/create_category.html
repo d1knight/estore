@@ -1,0 +1,50 @@
+{% extends 'admin.html' %}
+{% block admin %}
+
+<div class="box-book">
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <label for="name">Название категории:</label>
+        <input type="text" name="name" id="name" class="alert alert-info"><br>
+                
+        <label for="description">Описание:</label>
+        <input type="text" name="description" id="description" class="alert alert-info"><br>
+        
+        <label for="slug">Слаг:</label>
+        <input type="text" name="slug" id="slug" class="alert alert-info"><br>
+        
+        <!-- Поля для добавления атрибутов -->
+        <div id="attributes-container">
+            <label>Атрибуты:</label>
+            <div class="attribute-field">
+                <input type="text" name="attributes[]" placeholder="Название атрибута" class="alert alert-info">
+            </div>
+        </div>
+        
+        <!-- Кнопка для добавления новых полей атрибутов -->
+        <button type="button" onclick="addAttributeField()" class="btn btn-secondary">Добавить атрибут</button><br><br>
+        
+        <button type="submit" class="btn btn-success">Создать категорию</button>
+        
+    </form>
+    
+</div>
+
+<div class="footer">
+    <a href="{% url 'admin_panel:category_list' %}" class="btn btn-primary">Назад</a>
+</div>
+
+<script>
+    // Скрипт для добавления новых полей атрибутов
+    function addAttributeField() {
+        const container = document.getElementById('attributes-container');
+        const newField = document.createElement('div');
+        newField.classList.add('attribute-field');
+        newField.innerHTML = '<input type="text" name="attributes[]" placeholder="Название атрибута" class="alert alert-info">';
+        container.appendChild(newField);
+    }
+</script>
+
+{% endblock %}

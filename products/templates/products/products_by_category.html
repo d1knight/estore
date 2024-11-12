@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+
+{% block content %}
+<h1 class="my-4 text-center">Продукты в категории: {{ category.name }}</h1>
+
+<!-- Форма для расширенного поиска -->
+<form method="get" class="mb-4 d-flex gap-2 justify-content-center">
+    <input type="text" name="q" placeholder="Поиск по имени" value="{{ search_query }}" class="form-control" />
+    <input type="number" name="min_price" placeholder="Мин. цена" value="{{ min_price }}" class="form-control" />
+    <input type="number" name="max_price" placeholder="Макс. цена" value="{{ max_price }}" class="form-control" />
+    <button type="submit" class="btn btn-primary">Поиск</button>
+</form>
+
+<div class="row gx-3 gy-4">
+    {% if page_obj %}
+        {% for product in page_obj %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="p-2">
+                    <div class="card h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.8);">
+                        <div class="card-img-top-wrapper" style="height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
+                        </div>
+                        <div class="card-body p-1">
+                            <h5 class="card-title" style="font-size: 1rem;">
+                                {{ product.name }}
+                            </h5>
+                            <p class="card-text" style="font-size: 0.875rem;">{{ product.short_description }}</p>
+                            <p class="card-text">Цена: {{ product.price_display }} сум</p>
+
+
+
+                            <a href="{% url 'product_detail' product.category.slug product.slug %}" class="btn btn-primary btn-sm mb-2">Подробнее</a>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="#" title="В избранное">
+                                    <i class="fas fa-heart text-danger"></i>
+                                </a>
+                                <a href="#" title="В корзину">
+                                    <i class="fas fa-shopping-cart text-success"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет продуктов в этой категории.</p>
+    {% endif %}
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; Первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}">« Назад</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Вперед »</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя »»</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

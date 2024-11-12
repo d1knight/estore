@@ -1,0 +1,57 @@
+{% extends 'admin.html' %}
+{% block admin %}
+<div class="box-author">
+    <div class="create">
+        <h1>Продукты</h1>
+        <button type="button" class="btn btn-success">
+            <a href="{% url 'admin_panel:create_product' %}">Добавить Продукт</a>
+        </button>
+    </div>
+    
+    <table class="table">
+        <tr>
+            <th>Название продукта</th>
+            <th>Описание</th>
+            <th>Слаг</th>
+            <th>Цена</th>
+            <th>Редактирование</th>
+            <th>Удаление</th>
+        </tr>
+        {% for product in page_obj %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description|slice:":80" }}{% if product.description|length > 80 %}...{% endif %}</td>
+            <td>{{ product.slug }}</td>
+            <td>{{ product.price }}</td>
+            <td>
+                <button type="button" class="btn btn-warning">
+                    <a href="#">Редактировать</a>
+                </button>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger">
+                    <a href="#">Удалить</a>
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <!-- Пагинация -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Первая</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+            {% endif %}
+            
+            <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+            
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Последняя &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}
