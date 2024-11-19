@@ -19,8 +19,16 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:  # Если slug не заполнен
-            self.slug = slugify(self.name)  # Генерируем slug на основе имени продукта
-        super(Product, self).save(*args, **kwargs)
+            category_slug = slugify(self.category.name)  # Слаг для категории
+            product_slug = slugify(self.name)  # Слаг для продукта
+            self.slug = f"{category_slug}-{product_slug}"  # Формируем общий слаг для продукта
+
+            # Проверка уникальности слага
+            if Product.objects.filter(slug=self.slug).exists():
+                self.slug = f"{self.slug}-{Product.objects.filter(slug__startswith=self.slug).count() + 1}"
+
+        super().save(*args, **kwargs)
+
 
 
 class ProductImage(models.Model):

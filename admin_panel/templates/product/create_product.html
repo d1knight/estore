@@ -1,72 +1,107 @@
 {% extends 'admin.html' %}
 
 {% block admin %}
-<h2>Создать продукт</h2>
-
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <!-- Категория -->
-    <div class="form-group">
-        <label for="category">Категория</label>
-        <select name="category" id="category" class="form-control" onchange="this.form.submit()">
-            <option value="">Выберите категорию</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}" {% if category.id == category_id %}selected{% endif %}>{{ category.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <!-- Название продукта -->
-    <div class="form-group">
-        <label for="name">Название продукта</label>
-        <input type="text" name="name" id="name" class="form-control" required>
-    </div>
-
-    <!-- Описание -->
-    <div class="form-group">
-        <label for="description">Описание</label>
-        <textarea name="description" id="description" class="form-control" required></textarea>
-    </div>
-
-    <!-- Цена -->
-    <div class="form-group">
-        <label for="price">Цена</label>
-        <input type="number" name="price" id="price" class="form-control" required>
-    </div>
-
-    <!-- Изображения -->
-    <div class="form-group">
-        <label for="image">Изображение 1</label>
-        <input type="file" name="image" id="image" class="form-control">
-    </div>
-    <div class="form-group">
-        <label for="image2">Изображение 2</label>
-        <input type="file" name="image2" id="image2" class="form-control">
-    </div>
-    <div class="form-group">
-        <label for="image3">Изображение 3</label>
-        <input type="file" name="image3" id="image3" class="form-control">
-    </div>
-    <div class="form-group">
-        <label for="image4">Изображение 4</label>
-        <input type="file" name="image4" id="image4" class="form-control">
-    </div>
-
-    <!-- Атрибуты -->
-    {% if attributes %}
-    <h3>Атрибуты</h3>
-    {% for attribute in attributes %}
+<div class="container mt-4">
+    <h2>Добавить новый продукт</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Выбор категории -->
         <div class="form-group">
-            <label for="attribute_{{ attribute.id }}">{{ attribute.name }}</label>
-            <input type="text" name="attribute_{{ attribute.id }}" class="form-control">
+            <label for="category-select">Категория:</label>
+            <select id="category-select" name="category" class="form-control">
+                <option value="">Выберите категорию</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == category_id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
         </div>
-    {% endfor %}
-    {% endif %}
 
-    <button type="submit" class="btn btn-primary">Создать</button>
-</form>
+        <!-- Данные продукта (название, описание, цена и изображения) -->
+        <div id="product-details" style="display: none;">
+            <div class="form-group">
+                <label for="name">Название:</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
 
-<a href="{% url 'admin_panel:product_list' %}" class="btn btn-secondary">Отмена</a>
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Цена:</label>
+                <input type="text" id="price" name="price" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Изображения:</label>
+                <input type="file" name="image" class="form-control">
+                <input type="file" name="image2" class="form-control">
+                <input type="file" name="image3" class="form-control">
+                <input type="file" name="image4" class="form-control">
+            </div>
+
+            <!-- Контейнер для атрибутов (будет заполняться динамически) -->
+            <div id="attributes-container">
+                <!-- Атрибуты будут добавляться сюда через JavaScript -->
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('category-select');
+    const productDetails = document.getElementById('product-details');
+    const attributeContainer = document.getElementById('attributes-container');
+    
+    categorySelect.addEventListener('change', function() {
+        const categoryId = this.value;
+
+        // Если категория выбрана
+        if (categoryId) {
+            // Отправляем запрос для получения атрибутов
+            fetch(`/get-category-attributes/?category_id=${categoryId}`)
+                .then(response => response.json())
+                .then(attributes => {
+                    // Показываем секцию с атрибутами
+                    productDetails.style.display = 'block';
+
+                    // Очищаем контейнер атрибутов перед добавлением новых
+                    attributeContainer.innerHTML = '';
+
+                    if (attributes.length > 0) {
+                        attributes.forEach(attribute => {
+                            // Создаем форму для атрибута
+                            const formGroup = document.createElement('div');
+                            formGroup.className = 'form-group mt-2';
+                            formGroup.innerHTML = `
+                                <label>${attribute.name}:</label>
+                                <input type="text" name="attribute_values-${attribute.id}-value" class="form-control">
+                            `;
+                            attributeContainer.appendChild(formGroup);
+                        });
+                    } else {
+                        // Если нет атрибутов для категории
+                        attributeContainer.innerHTML += '';
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при получении атрибутов:', error);
+                    productDetails.style.display = 'none';
+                });
+        } else {
+            // Если категория не выбрана, скрываем секцию с атрибутами
+            productDetails.style.display = 'none';
+        }
+    });
+});
+</script>
+
 
 {% endblock %}

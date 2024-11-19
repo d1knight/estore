@@ -7,6 +7,10 @@
             <a href="{% url 'admin_panel:create_product' %}">Добавить Продукт</a>
         </button>
     </div>
+    <form method="get" action="{% url 'admin_panel:product_list' %}" class="form-inline mb-3">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск по названию" class="form-control mr-2 transparent-input">
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </form>
     
     <table class="table">
         <tr>
@@ -25,12 +29,12 @@
             <td>{{ product.price }}</td>
             <td>
                 <button type="button" class="btn btn-warning">
-                    <a href="#">Редактировать</a>
+                    <a href="{% url 'admin_panel:update_product' product.pk %}">Редактировать</a>
                 </button>
             </td>
             <td>
                 <button type="button" class="btn btn-danger">
-                    <a href="#">Удалить</a>
+                    <a href="{% url 'admin_panel:delete_product' product.pk %}">Удалить</a>
                 </button>
             </td>
         </tr>

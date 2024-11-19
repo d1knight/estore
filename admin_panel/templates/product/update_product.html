@@ -1,0 +1,56 @@
+{% extends 'admin.html' %}
+{% block admin %}
+
+<div class="box-update-author">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="name">Название продукта:</label>
+    <input class="alert alert-info" type="text" name="name" id="name" value="{{ product.name }}"><br>
+
+    <label for="description">Описание:</label>
+    <input class="alert alert-info" type="text" name="description" id="description" value="{{ product.description }}"><br>
+
+    <label for="slug">Слаг:</label>
+    <input class="alert alert-info" type="text" name="slug" id="slug" value="{{ product.slug }}"><br>
+
+    <label for="price">Цена:</label>
+    <input class="alert alert-info" type="text" name="price" id="price" value="{{ product.price }}"><br>
+
+    <label for="image">Фото:</label>
+    <input type="file" name="image" id="image"><br>
+
+    <label for="image2">Фото 2:</label>
+    <input type="file" name="image2" id="image2"><br>
+
+    <label for="image3">Фото 3:</label>
+    <input type="file" name="image3" id="image3"><br>
+
+    <label for="image4">Фото 4:</label>
+    <input type="file" name="image4" id="image4"><br>
+
+    {% for attribute in category_attributes %}
+    <label for="attribute_{{ attribute.id }}">{{ attribute.name }}:</label>
+    {% with value=None %}
+        {% for val in attribute_values %}
+            {% if val.attribute_id == attribute.id %}
+                {% with value=val.value %}
+                    {# Присваиваем значение переменной value #}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    {% endwith %} <!-- Завершаем блок with -->
+    <input class="alert alert-info" type="text" name="attribute_{{ attribute.id }}" 
+           id="attribute_{{ attribute.id }}" 
+           value="{{ value }}">
+    <br>
+{% endfor %}
+
+
+
+
+
+    <button class="btn btn-success" type="submit">Сохранить</button>
+</form>
+</div>
+
+{% endblock %}

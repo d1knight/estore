@@ -4,7 +4,7 @@
     padding: 0;
 }
 body{
-    background: url(../img/background.jpeg);
+    background: url(../img/admin_panel.jpg);
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -40,7 +40,7 @@ cursor: pointer;
 }
 .containerr .content {
     display: flex;
-    height: 85vh;
+    min-height: 100px;
     margin: 0 2.5%;
 }
 

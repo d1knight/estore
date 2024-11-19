@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Результаты поиска для: "{{ query }}"</h1>
+
+    {% if categories_with_products %}
+        {% for category, products in categories_with_products.items %}
+            <h2>{{ category.name }}</h2>
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'images/default-image.jpg' %}" class="card-img-top" alt="No image available">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                                <p class="card-text"><strong>{{ product.price }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Нет результатов для вашего запроса.</p>
+    {% endif %}
+</div>
+{% endblock %}

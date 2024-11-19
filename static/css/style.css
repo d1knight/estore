@@ -93,6 +93,15 @@ header ul li a {
     overflow: hidden;
 }
 
+.main-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
 .main-image img {
     width: 100%;
     height: auto;
@@ -157,4 +166,83 @@ header ul li a {
 
 .next-button {
     right: 0;
+}
+
+
+.mb-4 {
+    margin-top: 20px; /* Отступ сверху для формы */
+}
+
+.mb-4 .d-flex {
+    gap: 15px; /* Общий отступ между элементами формы */
+}
+
+.mb-4 .form-control,
+.mb-4 .form-select {
+    margin-bottom: 10px; /* Отступ снизу для полей ввода */
+}
+
+.mb-4 button {
+    margin-top: 10px; /* Отступ сверху для кнопки */
+}
+
+
+.form-control {
+    background-color: rgba(255, 255, 255, 0.5); /* Полупрозрачный белый фон */
+    border: 1px solid #ccc; /* Легкая граница */
+    border-radius: 4px; /* Сглаженные углы */
+    padding: 8px; /* Отступ внутри поля */
+    color: #333; /* Цвет текста */
+}
+
+.form-control:focus {
+    background-color: rgba(255, 255, 255, 0.8); /* Уменьшение прозрачности при фокусе */
+    border-color: #007bff; /* Цвет границы при фокусе */
+    outline: none; /* Убираем стандартный outline */
+}
+
+
+/* Общий стиль для пагинации */
+.pagination {
+    display: flex;
+    justify-content: center; /* Центрирование пагинации */
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* Стили для ссылок пагинации */
+.pagination a, .pagination span {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: white;
+    font-size: 16px;
+}
+
+/* Стили для текущей страницы */
+.pagination .current-page {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Стили для стрелок */
+.pagination a:first-child, .pagination a:last-child {
+    font-size: 18px;
+}
+
+/* Стили для активных ссылок пагинации */
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Стили для неактивных ссылок (когда нет предыдущей или следующей страницы) */
+.pagination a[disabled] {
+    color: #ccc;
+    pointer-events: none;
+    border-color: #ccc;
 }

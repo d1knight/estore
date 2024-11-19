@@ -1,5 +1,7 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ product.name }}</title>
@@ -13,28 +15,28 @@
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .main-image img {
             width: 100%;
             height: auto;
             object-fit: contain;
         }
-        
+
         .thumbnail-container {
             position: relative;
             padding: 0 40px;
         }
-        
+
         .thumbnail-wrapper {
             overflow: hidden;
             position: relative;
         }
-        
+
         .thumbnail-strip {
             display: flex;
             transition: transform 0.3s ease;
         }
-        
+
         .thumbnail {
             flex: 0 0 80px;
             height: 80px;
@@ -44,22 +46,22 @@
             cursor: pointer;
             overflow: hidden;
         }
-        
+
         .thumbnail.active {
             border-color: #0d6efd;
         }
-        
+
         .thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .nav-button {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
             border-radius: 50%;
@@ -71,76 +73,117 @@
             cursor: pointer;
             z-index: 2;
         }
-        
+
         .prev-button {
             left: 0;
         }
-        
+
         .next-button {
             right: 0;
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-4">
         <h1>{{ product.name }}</h1>
-        
+
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="main-image">
-                    <img src="{{ product.image.url }}" id="main-img" alt="{{ product.name }}">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" id="main-img" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="path/to/default/image.jpg" id="main-img" alt="No image available">
+                    {% endif %}
                 </div>
-                
+
                 <div class="thumbnail-container">
                     <button class="nav-button prev-button">&lt;</button>
                     <div class="thumbnail-wrapper">
                         <div class="thumbnail-strip">
                             {% if product.image %}
-                            <div class="thumbnail active" data-img-url="{{ product.image.url }}">
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                            </div>
+                                <div class="thumbnail active" data-img-url="{{ product.image.url }}">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                </div>
+                            {% else %}
+                                <div class="thumbnail active" data-img-url="{% static 'images/default-image.jpg' %}">
+                                    <img src="{% static 'images/default-image.jpg' %}" alt="No image available">
+                                </div>
                             {% endif %}
-                            
+                
                             {% if product.image2 %}
-                            <div class="thumbnail" data-img-url="{{ product.image2.url }}">
-                                <img src="{{ product.image2.url }}" alt="{{ product.name }}">
-                            </div>
+                                <div class="thumbnail" data-img-url="{{ product.image2.url }}">
+                                    <img src="{{ product.image2.url }}" alt="{{ product.name }}">
+                                </div>
+                            {% else %}
+                                <div class="thumbnail" data-img-url="{% static 'images/default-image.jpg' %}">
+                                    <img src="{% static 'images/default-image.jpg' %}" alt="No image available">
+                                </div>
                             {% endif %}
-                            
+                
                             {% if product.image3 %}
-                            <div class="thumbnail" data-img-url="{{ product.image3.url }}">
-                                <img src="{{ product.image3.url }}" alt="{{ product.name }}">
-                            </div>
+                                <div class="thumbnail" data-img-url="{{ product.image3.url }}">
+                                    <img src="{{ product.image3.url }}" alt="{{ product.name }}">
+                                </div>
+                            {% else %}
+                                <div class="thumbnail" data-img-url="{% static 'images/default-image.jpg' %}">
+                                    <img src="{% static 'images/default-image.jpg' %}" alt="No image available">
+                                </div>
                             {% endif %}
-                            
+                
                             {% if product.image4 %}
-                            <div class="thumbnail" data-img-url="{{ product.image4.url }}">
-                                <img src="{{ product.image4.url }}" alt="{{ product.name }}">
-                            </div>
+                                <div class="thumbnail" data-img-url="{{ product.image4.url }}">
+                                    <img src="{{ product.image4.url }}" alt="{{ product.name }}">
+                                </div>
+                            {% else %}
+                                <div class="thumbnail" data-img-url="{% static 'images/default-image.jpg' %}">
+                                    <img src="{% static 'images/default-image.jpg' %}" alt="No image available">
+                                </div>
                             {% endif %}
                         </div>
                     </div>
                     <button class="nav-button next-button">&gt;</button>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
                 <p>{{ product.description }}</p>
-                <p class="h3">Цена: {{ product.price }}</p>
+                
+                {% if attributes %}
+                    <ul class="list-group">
+                        {% for attribute_value in attributes %}
+                            <li class="list-group-item">
+                                <strong>{{ attribute_value.attribute.name }}:</strong>  <!-- атрибут имени -->
+                                {{ attribute_value.value }}  <!-- значение атрибута -->
+                            </li>
+                        {% endfor %}
+                    </ul>
+               
+                {% endif %}
+                
+
+
+                <p class="h3">Цена: {{ product.price }} сум</p>
+
                 <a href="{% url 'products_by_category' product.category.slug %}" class="btn btn-secondary">
                     Вернуться к списку</a>
             </div>
+
+
+
+
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const mainImg = document.getElementById('main-img');
             const thumbnails = document.querySelectorAll('.thumbnail');
             const thumbnailStrip = document.querySelector('.thumbnail-strip');
             const prevButton = document.querySelector('.prev-button');
             const nextButton = document.querySelector('.next-button');
-            
+
             let currentIndex = 0;
             const totalThumbnails = thumbnails.length;
 
@@ -149,7 +192,7 @@
                 // Обновляем главное изображение
                 const thumbnail = thumbnails[index];
                 mainImg.src = thumbnail.dataset.imgUrl;
-                
+
                 // Обновляем активную миниатюру
                 thumbnails.forEach(t => t.classList.remove('active'));
                 thumbnail.classList.add('active');
@@ -173,7 +216,7 @@
 
             // Обработчики для миниатюр (если нужно оставить возможность клика)
             thumbnails.forEach((thumbnail, index) => {
-                thumbnail.addEventListener('click', function() {
+                thumbnail.addEventListener('click', function () {
                     currentIndex = index;
                     updateActiveImage(currentIndex);
                 });
@@ -181,4 +224,5 @@
         });
     </script>
 </body>
+
 </html>

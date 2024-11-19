@@ -1,0 +1,17 @@
+{% extends 'admin.html' %}
+
+{% block admin %}
+
+<div class="box-delete">
+  <h1>Удалить продукт</h1>
+<p>Вы уверены, что хотите удалить продукт "{{ product.name }}"?</p>
+<form method="post">
+  {% csrf_token %}
+  <button class="btn btn-danger" type="submit">Удалить</button>  <a class="btn btn-primary" href="{% url 'admin_panel:product_list' %}">Назад</a>
+</form>
+
+</div>
+
+
+{% endblock%}
+

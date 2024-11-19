@@ -1,5 +1,122 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h1>Welcome to the main page</h1>
+{% for category, page_obj in categories_with_products.items %}
+    <!-- Название категории -->
+    <h2>{{ category.name }}</h2>
+
+    <!-- Список продуктов -->
+    <div class="row">
+        {% for product in page_obj %}
+            <div class="col-md-3">
+                <div class="card">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-image.jpg' %}" class="card-img-top" alt="No image available">
+                    {% endif %}
+                    <div class="card-body">
+                        <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+
+                        <!-- Кнопки добавления в избранное и корзину -->
+                        <div class="d-flex justify-content-between">
+                            <!-- Избранное -->
+                            <a href="#" id="favorite_{{ product.id }}" class="btn btn-light favorite-btn">
+                                <i class="fas fa-heart"></i> В избранное
+                            </a>
+                            
+                            <!-- Корзина -->
+                            <a href="#" id="cart_{{ product.id }}" class="btn btn-light cart-btn">
+                                <i class="fas fa-shopping-cart"></i>  корзину
+                            </a>
+                        </div>
+
+                        <!-- Кнопка Подробнее -->
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <nav aria-label="Page navigation" id="pagination">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <!-- Кнопка на первую страницу -->
+                <li class="page-item">
+                    <a class="page-link" href="?page_{{ category.id }}=1&q={{ query }}" onclick="scrollToPagination(event)">Первая</a>
+                </li>
+                <!-- Кнопка на предыдущую страницу -->
+                <li class="page-item">
+                    <a class="page-link" href="?page_{{ category.id }}={{ page_obj.previous_page_number }}&q={{ query }}" onclick="scrollToPagination(event)">Назад</a>
+                </li>
+            {% endif %}
+
+            <!-- Текущая страница -->
+            <li class="page-item active">
+                <span class="page-link">{{ page_obj.number }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <!-- Кнопка на следующую страницу -->
+                <li class="page-item">
+                    <a class="page-link" href="?page_{{ category.id }}={{ page_obj.next_page_number }}&q={{ query }}" onclick="scrollToPagination(event)">Вперед</a>
+                </li>
+                <!-- Кнопка на последнюю страницу -->
+                <li class="page-item">
+                    <a class="page-link" href="?page_{{ category.id }}={{ page_obj.paginator.num_pages }}&q={{ query }}" onclick="scrollToPagination(event)">Последняя</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endfor %}
+
+<script>
+    // Функция для изменения состояния кнопок
+    function toggleButtonState(productId, type) {
+        const btn = document.getElementById(`${type}_${productId}`);
+        
+        if (type === "favorite") {
+            // Для кнопки "Избранное"
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active");
+                btn.querySelector("i").style.color = "black";  // Убираем красный
+            } else {
+                btn.classList.add("active");
+                btn.querySelector("i").style.color = "red";  // Красный цвет
+            }
+        } else if (type === "cart") {
+            // Для кнопки "Корзина"
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active");
+                btn.querySelector("i").style.color = "black";  // Убираем зеленый
+            } else {
+                btn.classList.add("active");
+                btn.querySelector("i").style.color = "green";  // Зеленый цвет
+            }
+        }
+    }
+
+    // При клике на кнопку Избранного
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const productId = this.id.split('_')[1];
+            toggleButtonState(productId, 'favorite');
+        });
+    });
+
+    // При клике на кнопку Корзины
+    document.querySelectorAll('.cart-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const productId = this.id.split('_')[1];
+            toggleButtonState(productId, 'cart');
+        });
+    });
+</script>
 
 {% endblock %}
