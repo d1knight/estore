@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="my-4 text-center">Ваша корзина</h1>
+
+  {% if cart and cart.cartitem_set.all %}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Товар</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Итого</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart.cartitem_set.all %}
+            <tr>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.product.price }} сум</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.product.price|multiply:item.quantity }} сум</td>
+              <td>
+                <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                <!-- Здесь можно добавить функциональность для изменения количества товаров -->
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Общая стоимость -->
+    <div class="d-flex justify-content-between my-4">
+      <h3>Общая сумма: 
+        {% with total=0 %}
+          {% for item in cart.cartitem_set.all %}
+            {% with total=total|add:item.product.price|multiply:item.quantity %}
+            {% endwith %}
+          {% endfor %}
+          {{ total }} сум
+        {% endwith %}
+      </h3>
+      
+      <a href="{% url 'cart:checkout' %}" class="btn btn-primary btn-lg">Перейти к оформлению</a>
+    </div>
+  {% else %}
+    <p>Ваша корзина пуста. Пожалуйста, добавьте товары в корзину.</p>
+  {% endif %}
+{% endblock %}

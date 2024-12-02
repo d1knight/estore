@@ -5,46 +5,53 @@
 <h1 class="my-4 text-center">Продукты в категории: {{ category.name }}</h1>
 
 <!-- Фильтрация -->
-
-
 <div class="row gx-3 gy-4">
     {% if page_obj %}
-        {% for product in page_obj %}
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="p-2">
-                    <div class="card h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.8);">
-                        <div class="card-img-top-wrapper" style="height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
-                            {% else %}
-                                <img src="path/to/default/image.jpg" class="card-img-top" alt="No image available" style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
-                            {% endif %}
-                        </div>
+    {% for product in page_obj %}
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="p-2">
+            <div class="card h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.8);">
+                <div class="card-img-top-wrapper"
+                    style="height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                        style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
+                    {% else %}
+                    <img src="path/to/default/image.jpg" class="card-img-top" alt="No image available"
+                        style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
+                    {% endif %}
+                </div>
+
+                <div class="card-body p-1">
+                    <h5 class="card-title" style="font-size: 1rem;">
+                        {{ product.name }}
+                    </h5>
+                    <p class="card-text" style="font-size: 0.875rem;">{{ product.short_description }}</p>
+                    <p class="card-text">Цена: {{ product.price|floatformat:2 }} сум</p>
+
+                    <a href="{% if product.slug %}{% url 'product_detail' product.category.slug product.slug %}{% else %}# {% endif %}"
+                        class="btn btn-primary btn-sm mb-2">Подробнее</a>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="#" title="В избранное">
+                            <i class="fas fa-heart text-danger"></i>
+                        </a>
+
+                        <!-- Добавление в корзину -->
+                        <form method="post" action="{% url 'cart:add_to_cart' product.id %}" id="add-to-cart-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                        </form>
                         
-                        <div class="card-body p-1">
-                            <h5 class="card-title" style="font-size: 1rem;">
-                                {{ product.name }}
-                            </h5>
-                            <p class="card-text" style="font-size: 0.875rem;">{{ product.short_description }}</p>
-                            <p class="card-text">Цена: {{ product.price_display }} сум</p>
 
-                            <a href="{% if product.slug %}{% url 'product_detail' product.category.slug product.slug %}{% else %}# {% endif %}" class="btn btn-primary btn-sm mb-2">Подробнее</a>
-
-                            <div class="d-flex justify-content-between">
-                                <a href="#" title="В избранное">
-                                    <i class="fas fa-heart text-danger"></i>
-                                </a>
-                                <a href="#" title="В корзину">
-                                    <i class="fas fa-shopping-cart text-success"></i>
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
     {% else %}
-        <p>Нет продуктов в этой категории.</p>
+    <p>Нет продуктов в этой категории.</p>
     {% endif %}
 </div>
 
@@ -52,8 +59,10 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">« Первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">« Назад</a>
+        <a href="?page=1&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">« Первая</a>
+        <a
+            href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">«
+            Назад</a>
         {% endif %}
 
         <span class="current">
@@ -61,8 +70,12 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Вперед »</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Последняя »»</a>
+        <a
+            href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Вперед
+            »</a>
+        <a
+            href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Последняя
+            »»</a>
         {% endif %}
     </span>
 </div>

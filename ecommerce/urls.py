@@ -11,6 +11,7 @@ urlpatterns = [
     path('products/', include('products.urls')),  # Включаем URL приложения products, если такое имеется
     path('admin_panel/', include('admin_panel.urls', namespace = "admin_panel")), #с помощью namespace изолируем admin_panel
     path('get-category-attributes/', views.get_category_attributes, name='get_category_attributes'),
+    path('cart/', include('cart.urls')),
 ]
 
 # Настройка для обработки медиафайлов
