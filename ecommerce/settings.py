@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'category',
     'products',
     'admin_panel',
-    'users',
 ]
 
 MIDDLEWARE = [
@@ -131,4 +130,3 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = "users.User"
