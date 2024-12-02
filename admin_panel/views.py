@@ -15,6 +15,19 @@ from .forms import CustomUserCreationForm
 from unidecode import unidecode
 
 
+
+
+def superuser_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            # Добавление сообщения об ошибке
+            messages.error(request, "У вас нет доступа к этому модулю. Доступ только для администраторов.")
+            return redirect('/')  # Перенаправление на главную страницу или другую публичную страницу
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+@superuser_required
 def admin_panel(request):
     return render(request,'admin_panel/admin_panel.html')
 
@@ -39,6 +52,7 @@ def login(request):
         password = request.POST.get('password')
         user = authenticate(request,username=username,password=password)
 
+    
 
         if user is not None:
             auth_login(request, user)  # Используем alias auth_login
@@ -53,7 +67,7 @@ def logout_view(request):
     logout(request)
     return redirect('main')
 
-@login_required
+@superuser_required
 def category_list(request):
     category = Category.objects.all()
     paginator = Paginator(category, 3)  # Показать 5 авторов на странице
@@ -62,7 +76,7 @@ def category_list(request):
     return render(request,'category/category_list.html',{'page_obj':page_obj})
 
 
-@login_required
+@superuser_required
 def product_list(request):
     search_query = request.GET.get('search', '')  # Получение строки поиска из GET-параметров
     products = Product.objects.all()
@@ -82,7 +96,7 @@ def product_list(request):
     })
 
 
-@login_required
+@superuser_required
 def create_category(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -132,7 +146,7 @@ def generate_slug(name):
     return slug
 
 
-@login_required
+@superuser_required
 def create_product(request):
     categories = Category.objects.all()
     category_id = request.GET.get('category') or request.POST.get('category')
@@ -203,7 +217,7 @@ def create_product(request):
         'category_id': category_id,
     })
 
-@login_required
+@superuser_required
 def update_category(request, pk):
     category = get_object_or_404(Category, pk=pk)
     attributes = category.attributes.all()  # Получаем атрибуты категории
@@ -227,7 +241,7 @@ def update_category(request, pk):
     return render(request, 'category/update_category.html', {'category': category, 'attributes': attributes})
 
 
-@login_required
+@superuser_required
 def update_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
     category_attributes = product.category.attributes.all()  # Получаем атрибуты категории
@@ -277,7 +291,7 @@ def update_product(request, pk):
     })
 
 
-@login_required
+@superuser_required
 def delete_category(request,pk):
     category = get_object_or_404(Category,pk=pk)
     if request.method == 'POST':
@@ -286,7 +300,7 @@ def delete_category(request,pk):
     return render(request,'category/delete_category.html',{'category':category})
 
 
-@login_required
+@superuser_required
 def delete_product(request,pk):
     product = get_object_or_404(Product,pk=pk)
     if request.method == 'POST':

@@ -1,5 +1,11 @@
 {% extends 'admin.html' %}
 {% block admin %}
 <h1>Welcome to admin panel</h1>
-
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}

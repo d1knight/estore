@@ -2,6 +2,13 @@
 {% load static %}
 
 {% block content %}
+{% if messages %}
+    <div class="alert alert-warning" role="alert">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
 {% for category, page_obj in categories_with_products.items %}
     <!-- Название категории -->
     <h2>{{ category.name }}</h2>
@@ -73,6 +80,8 @@
         </ul>
     </nav>
 {% endfor %}
+
+
 
 <script>
     // Функция для изменения состояния кнопок
