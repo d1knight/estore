@@ -3,6 +3,7 @@ from products.models import Product  # или другой путь к моде�
 from django.core.paginator import Paginator
 from category.models import Category
 from products.models import Product
+from cart.models import Cart
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
@@ -11,6 +12,16 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 
 def main(request):
+    # Логика для корзины
+    cart_item_count = 0
+    if request.user.is_authenticated:
+        try:
+            cart = Cart.objects.get(user=request.user)
+            cart_item_count = cart.items.count()  # Количество товаров в корзине
+        except Cart.DoesNotExist:
+            cart_item_count = 0
+
+    # Логика для поиска продуктов
     query = request.GET.get('q', '')
 
     # Получаем все категории
@@ -34,7 +45,10 @@ def main(request):
     return render(request, 'main/index.html', {
         'categories_with_products': categories_with_products,
         'query': query,
+        'cart_item_count': cart_item_count,  # Передаем количество товаров в корзине
     })
+
+
 
 def search_results(request):
     query = request.GET.get('q', '').strip()  # Получаем строку поиска

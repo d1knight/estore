@@ -1,18 +1,35 @@
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from category.models import Category
 from products.models import Product
 from .models import Cart, CartItem
 
 # Страница корзины
 def view_cart(request):
-    # Получаем одну корзину пользователя
-    try:
-        cart = Cart.objects.get(user=request.user)
-    except Cart.DoesNotExist:
-        cart = None
+    # Получаем одну корзину пользователя или создаем новую
+    cart, created = Cart.objects.get_or_create(user=request.user)
 
     return render(request, 'cart/view_cart.html', {'cart': cart})
+
+
+
+
+
+
+def base_view(request):
+    cart_item_count = 0
+
+    if request.user.is_authenticated:
+        try:
+            cart = Cart.objects.get(user=request.user)
+            cart_item_count = cart.items.count()  # Получаем количество товаров в корзине
+        except Cart.DoesNotExist:
+            cart = None
+
+    return render(request, 'base.html', {'cart_item_count': cart_item_count, 'categories': Category.objects.all()})
+
+
 
 @login_required
 def add_to_cart(request, product_id):

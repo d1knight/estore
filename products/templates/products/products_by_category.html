@@ -1,83 +1,98 @@
 {% extends "base.html" %}
 {% load humanize %}
-
+{% load static %}
 {% block content %}
+
+
+
 <h1 class="my-4 text-center">Продукты в категории: {{ category.name }}</h1>
 
-<!-- Фильтрация -->
+<!-- Карточки продуктов -->
 <div class="row gx-3 gy-4">
     {% if page_obj %}
     {% for product in page_obj %}
     <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="p-2">
-            <div class="card h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.8);">
+            <div class="card h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.9);">
+                <!-- Изображение -->
                 <div class="card-img-top-wrapper"
                     style="height: 200px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
-                        style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
+                        style="width: auto; height: 100%; max-height: 100%; object-fit: contain;">
                     {% else %}
-                    <img src="path/to/default/image.jpg" class="card-img-top" alt="No image available"
-                        style="width: auto; height: 100%; max-height: 100%; object-fit: contain; margin-top: 10px;">
+                    <img src="{% static 'images/default-image.jpg' %}" class="card-img-top" alt="Нет изображения"
+                        style="width: auto; height: 100%; max-height: 100%; object-fit: contain;">
                     {% endif %}
                 </div>
 
-                <div class="card-body p-1">
-                    <h5 class="card-title" style="font-size: 1rem;">
-                        {{ product.name }}
-                    </h5>
-                    <p class="card-text" style="font-size: 0.875rem;">{{ product.short_description }}</p>
-                    <p class="card-text">Цена: {{ product.price|floatformat:2 }} сум</p>
-
-                    <a href="{% if product.slug %}{% url 'product_detail' product.category.slug product.slug %}{% else %}# {% endif %}"
-                        class="btn btn-primary btn-sm mb-2">Подробнее</a>
-
-                    <div class="d-flex justify-content-between">
-                        <a href="#" title="В избранное">
-                            <i class="fas fa-heart text-danger"></i>
-                        </a>
-
-                        <!-- Добавление в корзину -->
-                        <form method="post" action="{% url 'cart:add_to_cart' product.id %}" id="add-to-cart-form">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-                        </form>
-                        
-
+                <div class="card">
+                    <!-- Тело карточки -->
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 1.1rem; font-weight: bold;">
+                            {{ product.name }}
+                        </h5>
+                        <p class="card-text text-muted" style="font-size: 0.9rem;">{{ product.short_description }}</p>
+                        <p class="card-text h6">Цена: {{ product.price|floatformat:2 }} сум</p>
+                
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <!-- Подробнее -->
+                            <a href="{% if product.slug %}{% url 'product_detail' product.category.slug product.slug %}{% else %}# {% endif %}"
+                                class="btn btn-outline-primary btn-sm">Подробнее</a>
+                
+                            <!-- Добавление в корзину -->
+                            <form method="post" action="{% url 'cart:add_to_cart' product.id %}" class="mb-0">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-cart-plus"></i> В корзину
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
     {% endfor %}
     {% else %}
-    <p>Нет продуктов в этой категории.</p>
+    <p class="text-center mt-4">Нет продуктов в этой категории.</p>
     {% endif %}
 </div>
 
-<!-- Пагинация с сохранением параметров фильтрации -->
-<div class="pagination">
-    <span class="step-links">
+<!-- Пагинация -->
+{% if page_obj.has_other_pages %}
+<div class="pagination mt-4">
+    <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
-        <a href="?page=1&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">« Первая</a>
-        <a
-            href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">«
-            Назад</a>
+        <li class="page-item">
+            <a class="page-link"
+                href="?page=1&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">« Первая</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">«
+                Назад</a>
+        </li>
         {% endif %}
 
-        <span class="current">
-            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
-        </span>
+        <li class="page-item disabled">
+            <span class="page-link">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+        </li>
 
         {% if page_obj.has_next %}
-        <a
-            href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Вперед
-            »</a>
-        <a
-            href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Последняя
-            »»</a>
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Вперед
+                »</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ page_obj.paginator.num_pages }}&q={{ search_query }}&min_price={{ min_price }}&max_price={{ max_price }}">Последняя
+                »»</a>
+        </li>
         {% endif %}
-    </span>
+    </ul>
 </div>
-
+{% endif %}
 {% endblock %}

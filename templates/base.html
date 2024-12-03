@@ -13,6 +13,9 @@
 
 <body>
     <header class="bg-light p-3">
+        <a href="{% url 'main' %}" class="logo">
+            MD-Store
+        </a>
         <div class="catalog dropdown">
             <!-- Кнопка для открытия списка -->
             <a href="#" class="btn btn-light dropdown-toggle" id="catalogDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,8 +44,13 @@
         
         <div class="links">
             <ul class="list-inline mb-0">
-                <li class="list-inline-item"><a href="#">Избраное</a></li>
-                <li class="list-inline-item"><a href="{% url 'cart:view_cart' %}">Корзина</a></li>
+                <li class="list-inline-item">
+                    <a href="{% url 'cart:view_cart' %}">
+                        {% if cart_item_count > 0 %}
+                            <span class="badge bg-warning ms-2"><i class="fas fa-cart-plus"></i> {{ cart_item_count }}</span>  <!-- ms-2 для отступа -->
+                        {% endif %}
+                    </a>
+                </li>
                 {% if not user.is_authenticated %}
                     <li><a class="btn btn-warning" href="{% url 'admin_panel:register' %}">Регистрация</a></li>
                     <li><a class="btn btn-primary" href="{% url 'admin_panel:login' %}">Войти</a></li>
@@ -52,7 +60,12 @@
                         {% csrf_token %}
                         <button class="btn btn-danger" type="submit">Выйти</button>
                     </form>
-                    <li><a class="btn btn-primary" href="{% url 'admin_panel:admin_panel' %}">Админ</a></li>
+                    <li>
+                        {% if user.is_superuser %}
+                            <a class="btn btn-primary" href="{% url 'admin_panel:admin_panel' %}">Админ</a>
+                        {% endif %}
+                    </li>
+                    
                 {% endif %}
             </ul>
         </div>
