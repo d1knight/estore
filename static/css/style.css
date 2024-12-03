@@ -6,7 +6,6 @@
 
 header {
     height: 10vh;
-   
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -245,4 +244,11 @@ header ul li a {
     color: #ccc;
     pointer-events: none;
     border-color: #ccc;
+}
+
+
+@media (max-width: 768px) {
+    .content-blog {
+      width: 100%; /* Контейнер будет занимать всю ширину на экранах меньше 768px */
+    }
 }

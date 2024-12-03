@@ -154,25 +154,23 @@
                     <ul class="list-group">
                         {% for attribute_value in attributes %}
                             <li class="list-group-item">
-                                <strong>{{ attribute_value.attribute.name }}:</strong>  <!-- атрибут имени -->
-                                {{ attribute_value.value }}  <!-- значение атрибута -->
+                                <strong>{{ attribute_value.attribute.name }}:</strong>  
+                                {{ attribute_value.value }}  
                             </li>
                         {% endfor %}
                     </ul>
-               
                 {% endif %}
                 
-
-
                 <p class="h3">Цена: {{ product.price }} сум</p>
+
+                <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                </form>
 
                 <a href="{% url 'products_by_category' product.category.slug %}" class="btn btn-secondary">
                     Вернуться к списку</a>
             </div>
-
-
-
-
         </div>
     </div>
 
@@ -187,18 +185,14 @@
             let currentIndex = 0;
             const totalThumbnails = thumbnails.length;
 
-            // Функция для обновления активного изображения
             function updateActiveImage(index) {
-                // Обновляем главное изображение
                 const thumbnail = thumbnails[index];
                 mainImg.src = thumbnail.dataset.imgUrl;
 
-                // Обновляем активную миниатюру
                 thumbnails.forEach(t => t.classList.remove('active'));
                 thumbnail.classList.add('active');
             }
 
-            // Обработчик для кнопки "назад"
             prevButton.addEventListener('click', () => {
                 if (currentIndex > 0) {
                     currentIndex--;
@@ -206,7 +200,6 @@
                 }
             });
 
-            // Обработчик для кнопки "вперед"
             nextButton.addEventListener('click', () => {
                 if (currentIndex < totalThumbnails - 1) {
                     currentIndex++;
@@ -214,7 +207,6 @@
                 }
             });
 
-            // Обработчики для миниатюр (если нужно оставить возможность клика)
             thumbnails.forEach((thumbnail, index) => {
                 thumbnail.addEventListener('click', function () {
                     currentIndex = index;
